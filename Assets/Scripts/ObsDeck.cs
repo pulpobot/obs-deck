@@ -38,13 +38,13 @@ public class ObsDeck : MonoBehaviour
         mainView.gameObject.SetActive(false);
     }
 
-    public void Connect(string ip, string password)
+    public void Connect(string ip, string port, string password)
     {
         if (!_obs.IsConnected)
         {
             try
             {
-                _obs.Connect(ip, password);
+                _obs.Connect("ws://" + ip + ":" + port, password);
             }
             catch (AuthFailureException)
             {

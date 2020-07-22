@@ -10,6 +10,8 @@ public class ConnectionView : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI txtServerIP;
     [SerializeField]
+    private TextMeshProUGUI txtServerPort;
+    [SerializeField]
     private TextMeshProUGUI txtServerPassword;
     [SerializeField]
     private TextMeshProUGUI btnConnectText;
@@ -17,19 +19,20 @@ public class ConnectionView : MonoBehaviour
     [SerializeField]
     private Button btnConnect;
 
-    public delegate void OnConnectionView(string ip, string password);
+    public delegate void OnConnectionView(string ip, string port, string password);
     public static OnConnectionView OnConnect;
 
     // Start is called before the first frame update
     void Start()
     {
-        txtServerIP.text = "ws://127.0.0.1:4444";
+        txtServerIP.text = "127.0.0.1";
+        txtServerPort.text = "4444";
         btnConnect.onClick.AddListener(OnConnectClick);
     }
 
     private void OnConnectClick()
     {
-        OnConnect(txtServerIP.text, txtServerPassword.text);
+        OnConnect(txtServerIP.text, txtServerPort.text, txtServerPassword.text);
     }
 
 }
