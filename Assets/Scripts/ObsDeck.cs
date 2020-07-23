@@ -81,6 +81,7 @@ public class ObsDeck : MonoBehaviour
             //If the app when to the background check the connectivity
             if (_obs != null && !_obs.IsConnected)
             {
+                Debug.Log("Disconnected during pause, restoring connection");
                 OnDisconnect(null, null);
                 Connect(lastIP, lastPort, lastPassword);
             }

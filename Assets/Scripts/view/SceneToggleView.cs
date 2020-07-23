@@ -13,6 +13,7 @@ public class SceneToggleView : MonoBehaviour
     
     public void Setup(OBSScene scene, string activeScene)
     {
+        name = scene.Name;
         this.scene = scene;
         this.GetComponentInChildren<Text>().text = scene.Name;
         this.GetComponent<Toggle>().isOn = scene.Name.Equals(activeScene);

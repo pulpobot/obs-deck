@@ -30,11 +30,9 @@ public class TransitionsView : MonoBehaviour
 
         List<OBSScene> scenes = controller.GetScenes();
 
-        int childCount = scenesListParent.transform.childCount;
-        while (childCount > 0)
+        for (int i = 0; i < scenesListParent.transform.childCount; i++)
         {
-            childCount--;
-            Destroy(scenesListParent.transform.GetChild(0).gameObject);
+            Destroy(scenesListParent.transform.GetChild(i).gameObject);
         }
 
         if (null != scenes)
