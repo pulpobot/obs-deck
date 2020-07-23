@@ -25,8 +25,8 @@ public class ConnectionView : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        txtServerIP.text = "127.0.0.1";
-        txtServerPort.text = "4444";
+        txtServerIP.text = PlayerPrefs.GetString(ObsDeck.LAST_IP_KEY, "127.0.0.1"); ;
+        txtServerPort.text = PlayerPrefs.GetString(ObsDeck.LAST_PORT_KEY, "4444"); ;
         btnConnect.onClick.AddListener(OnConnectClick);
     }
 
@@ -34,5 +34,4 @@ public class ConnectionView : MonoBehaviour
     {
         OnConnect(txtServerIP.text, txtServerPort.text, txtServerPassword.text);
     }
-
 }

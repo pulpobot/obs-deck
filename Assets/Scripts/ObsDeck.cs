@@ -12,10 +12,18 @@ public class ObsDeck : MonoBehaviour
     private ConnectionView connectionView;
     [SerializeField]
     private MainView mainView;
-    
+
+    private string lastIP;
+    private string lastPort;
+    private string lastPassword;
+
+    public const string LAST_IP_KEY = "lastIP";
+    public const string LAST_PORT_KEY = "lastPort";
+
     // Start is called before the first frame update
     void Start()
     {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         //view callbacks
         ConnectionView.OnConnect += Connect;
 
@@ -44,6 +52,9 @@ public class ObsDeck : MonoBehaviour
         {
             try
             {
+                lastIP = ip;
+                lastPort = port;
+                lastPassword = password;
                 _obs.Connect("ws://" + ip + ":" + port, password);
             }
             catch (AuthFailureException)
@@ -63,6 +74,19 @@ public class ObsDeck : MonoBehaviour
         }
     }
 
+    private void OnApplicationPause(bool pause)
+    {
+        if (!pause)
+        {
+            //If the app when to the background check the connectivity
+            if (_obs != null && !_obs.IsConnected)
+            {
+                OnDisconnect(null, null);
+                Connect(lastIP, lastPort, lastPassword);
+            }
+        }
+    }
+
     private void OnDisconnect(object sender, EventArgs e)
     {
         connectionView.gameObject.SetActive(true);
@@ -74,36 +98,9 @@ public class ObsDeck : MonoBehaviour
         Debug.Log("Connected: " + _obs.GetVersion().OBSStudioVersion);
         connectionView.gameObject.SetActive(false);
         mainView.gameObject.SetActive(true);
-        //gbControls.Enabled = true;
-
-        //var versionInfo = _obs.GetVersion();
-        //tbPluginVersion.Text = versionInfo.PluginVersion;
-        //tbOBSVersion.Text = versionInfo.OBSStudioVersion;
-
-        //btnListScenes.PerformClick();
-        //btnGetCurrentScene.PerformClick();
-
-        //btnListSceneCol.PerformClick();
-        //btnGetCurrentSceneCol.PerformClick();
-
-        //btnListProfiles.PerformClick();
-        //btnGetCurrentProfile.PerformClick();
-
-        //btnListTransitions.PerformClick();
-        //btnGetCurrentTransition.PerformClick();
-
-        //btnGetTransitionDuration.PerformClick();
-
-        //var streamStatus = _obs.GetStreamingStatus();
-        //if (streamStatus.IsStreaming) 
-        //    onStreamingStateChange(_obs, OutputState.Started);
-        //else
-        //    onStreamingStateChange(_obs, OutputState.Stopped);
-
-        //if (streamStatus.IsRecording)
-        //    onRecordingStateChange(_obs, OutputState.Started);
-        //else
-        //    onRecordingStateChange(_obs, OutputState.Stopped);
+        //store in player prefs latest successful data
+        PlayerPrefs.SetString(LAST_IP_KEY, lastIP);
+        PlayerPrefs.SetString(LAST_PORT_KEY, lastPort);
     }
 
     public bool IsRecording()
